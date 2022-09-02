@@ -1,14 +1,28 @@
+// src/service/user.service.ts
 import { Provide } from '@midwayjs/decorator';
-import { IUserOptions } from '../interface';
+import { User } from '../entity/user';
+import { InjectEntityModel } from '@midwayjs/orm';
+import { Repository } from 'typeorm';
+import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
 
 @Provide()
 export class UserService {
-  async getUser(options: IUserOptions) {
-    return {
-      uid: options.uid,
-      username: 'mockedName',
-      phone: '12345678901',
-      email: 'xxx.xxx@xxx.com',
-    };
+  @InjectEntityModel(User)
+  userModel: Repository<User>;
+
+  async create(user: User): Promise<User> {
+    return this.userModel.save(user);
+  }
+
+  async save(user: User): Promise<User> {
+    return this.userModel.save(user);
+  }
+
+  async findById(id: number): Promise<User> {
+    return this.userModel.findOneBy({ id });
+  }
+
+  async delete(id: number): Promise<DeleteResult> {
+    return this.userModel.delete(id);
   }
 }
